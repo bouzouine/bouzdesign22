@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bouziane Boutouizera — Portfolio</title>
+  <meta name="description" content="Portfolio de Bouziane Boutouizera — Packaging, Logo, Illustration, Poster" />
+  <style>
+    :root{
+      --accent:#ff6a00; /* orange */
+      --bg:#0b0b0b;    /* black */
+      --muted:#bfbfbf;
+      --gap:18px;
+      --radius:14px;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:linear-gradient(180deg,#070707 0%, #0f0f0f 100%);
+      color: #fff; -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; padding:28px;
+    }
+    .wrap{max-width:1200px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ff9300);display:grid;place-items:center;color:#0b0b0b;font-weight:800;font-size:18px
+    }
+    h1{margin:0;font-size:24px;line-height:1}
+    p.lead{margin:0;color:var(--muted)}
+
+    nav.filters{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .chip.active{background:var(--accent);color:#0b0b0b;font-weight:700;border-color:rgba(0,0,0,0.2)}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .search{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* Gallery grid */
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-top:22px}
+    .card{position:relative;border-radius:12px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .card img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .35s ease}
+    .card:hover img{transform:scale(1.03)}
+    .meta{padding:10px 12px}
+    .meta h3{margin:0;font-size:14px}
+    .meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,0.85);z-index:80}
+    .lightbox.open{display:grid}
+    .lightbox img{max-width:95%;max-height:85%;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+    .lb-close{position:absolute;top:20px;right:24px;background:var(--accent);color:#0b0b0b;border-radius:10px;padding:8px 12px;font-weight:700}
+
+    /* responsive */
+    @media (max-width:1000px){.gallery{grid-template-columns:repeat(2,1fr)}.card img{height:200px}}
+    @media (max-width:640px){header{flex-direction:column;align-items:flex-start}.gallery{grid-template-columns:repeat(1,1fr)}.card img{height:300px}}
+
+    /* footer */
+    footer{margin-top:28px;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,106,0,0.06), rgba(255,106,0,0.02));display:flex;justify-content:space-between;align-items:center}
+    .small{color:var(--muted);font-size:13px}
+
+    /* subtle focus */
+    .chip:focus,.search:focus{outline:2px solid rgba(255,255,255,0.06);outline-offset:3px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">BB</div>
+        <div>
+          <h1>Bouziane Boutouizera</h1>
+          <p class="lead">Packaging • Logo • Illustration • Poster — Portfolio</p>
+        </div>
+      </div>
+      <div class="controls">
+        <input id="search" class="search" placeholder="Cherche project..." />
+        <button id="downloadDemo" class="chip" title="Télécharger un ZIP demo (remplace les images)">Download demo</button>
+      </div>
+    </header>
+
+    <nav class="filters" aria-label="Filtrer projets">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="packaging">Packaging</button>
+      <button class="chip" data-filter="logo">Logo</button>
+      <button class="chip" data-filter="illustration">Illustration</button>
+      <button class="chip" data-filter="poster">Poster</button>
+    </nav>
+
+    <!-- Gallery: replace srcs in the <img> tags with your real project images (images/1.jpg ... images/30.jpg) -->
+    <section id="gallery" class="gallery" aria-live="polite">
+      <!-- We'll generate 30 cards (you can add more). Each card includes data-tags for filtering and a title. -->
+    </section>
+
+    <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+      <button id="lbClose" class="lb-close">Close</button>
+      <img id="lbImage" src="" alt="" />
+    </div>
+
+    <footer>
+      <div class="small">Designed & coded by Bouziane • Theme: Orange & Black</div>
+      <div class="small">Replace images in <code>/images/</code> and update project titles.</div>
+    </footer>
+  </div>
+
+  <script>
+    /* ====== DATA: demo items ======
+       Replace this array with your real project objects or build it server-side.
+       Each item: {id, title, tags:[], src: 'images/1.jpg'}
+    */
+    const demo = [];
+    const sampleTags = ['packaging','logo','illustration','poster'];
+    // generate 30 demo items (replace src to your image paths)
+    for(let i=1;i<=30;i++){
+      const tag = sampleTags[i % sampleTags.length];
+      demo.push({
+        id: i,
+        title: `${tag.toUpperCase()} — Project ${i}`,
+        tags:[tag],
+        // prefer to replace these with local files: /images/1.jpg etc.
+        src:`https://picsum.photos/seed/bouziane${i}/1200/800`
+      });
+    }
+
+    const gallery = document.getElementById('gallery');
+    const search = document.getElementById('search');
+    const filterButtons = Array.from(document.querySelectorAll('.filters .chip'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbClose = document.getElementById('lbClose');
+
+    function createCard(item){
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.setAttribute('data-tags', item.tags.join(' '));
+      el.setAttribute('data-title', item.title.toLowerCase());
+      el.innerHTML = `
+        <img loading="lazy" src="${item.src}" alt="${item.title}" />
+        <div class="meta"><h3>${item.title}</h3><p>${item.tags.join(' • ')}</p></div>
+      `;
+      el.addEventListener('click', ()=> openLightbox(item));
+      return el;
+    }
+
+    function render(items){
+      gallery.innerHTML = '';
+      if(!items.length){
+        gallery.innerHTML = '<div class="small" style="padding:30px">Aucun projet trouvé.</div>';
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      items.forEach(i=>frag.appendChild(createCard(i)));
+      gallery.appendChild(frag);
+    }
+
+    function openLightbox(item){
+      lbImage.src = item.src;
+      lbImage.alt = item.title;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+    }
+    function closeLightbox(){
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden','true');
+      lbImage.src='';
+    }
+
+    // filtering
+    function applyFilter(filter){
+      const q = search.value.trim().toLowerCase();
+      let items = demo.slice();
+      if(filter && filter !== 'all'){
+        items = items.filter(it => it.tags.includes(filter));
+      }
+      if(q) items = items.filter(it => it.title.toLowerCase().includes(q));
+      render(items);
+    }
+
+    // wire up chips
+    filterButtons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        filterButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilter(btn.dataset.filter);
+      });
+    });
+
+    // live search
+    let timer;
+    search.addEventListener('input', ()=>{
+      clearTimeout(timer);
+      timer = setTimeout(()=>{
+        const active = document.querySelector('.filters .chip.active').dataset.filter;
+        applyFilter(active);
+      },120);
+    });
+
+    // lightbox close
+    lbClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLightbox(); });
+
+    // initial render
+    render(demo);
+
+    /* ====== Handy notes for you (in-code) ======
+       - Replace the demo array with your own objects or keep it and replace src urls.
+       - Put your real images in /images/ and update src: 'images/1.jpg'
+       - To add captions, expand each item with a 'caption' property and render it in .meta.
+       - If you want more than 30 items, the grid will handle it; consider pagination or lazy-load on very large galleries.
+
+       Deployment quick tips (manual):
+       1) Create a GitHub repository, add this file as index.html and a folder /images with your photos.
+       2) Enable GitHub Pages (branch: main, folder: / (root)) OR deploy with Vercel for easy continuous deploys.
+       3) If you want a custom domain, add DNS records from your registrar to Vercel or GitHub Pages following their docs.
+    */
+
+    // Optional small demo zip downloader (client-side) — just to help you replace images locally quickly.
+    document.getElementById('downloadDemo').addEventListener('click', ()=>{
+      alert('This button is a placeholder. To publish: put index.html and /images into a repo and deploy to GitHub Pages or Vercel.');
+    });
+  </script>
+</body>
+</html>
