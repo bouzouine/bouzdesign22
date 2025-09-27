@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bouziane Boutouizera — Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">BB</div>
+      <div>
+        <h1>Bouziane Boutouizera</h1>
+        <p class="lead">Packaging • Logo • Illustration • Poster</p>
+      </div>
+    </div>
+    <div class="controls">
+      <input id="search" class="search" placeholder="Chercher projet...">
+    </div>
+  </header>
+
+  <nav class="filters">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="packaging">Packaging</button>
+    <button class="chip" data-filter="logo">Logo</button>
+    <button class="chip" data-filter="illustration">Illustration</button>
+    <button class="chip" data-filter="poster">Poster</button>
+  </nav>
+
+  <section id="gallery" class="gallery"></section>
+
+  <div id="lightbox" class="lightbox">
+    <button id="lbClose" class="lb-close">Close</button>
+    <img id="lbImage" src="" alt="">
+  </div>
+
+  <footer>
+    <p>© 2025 Bouziane Boutouizera — Orange & Black Theme</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
