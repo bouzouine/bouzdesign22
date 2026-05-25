@@ -1,44 +1,635 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bouziane Boutouizera — Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bouziane Studio — Packaging Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0908;
+  --surface:#111010;
+  --card:#161514;
+  --text:#f0ece4;
+  --muted:#6b6760;
+  --accent:#c9a96e;
+  --accent2:#8a6e42;
+  --border:rgba(201,169,110,0.15);
+  --border-soft:rgba(240,236,228,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;width:10px;height:10px;background:var(--accent);
+  border-radius:50%;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:transform 0.1s,width 0.3s,height 0.3s,background 0.3s;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1px solid rgba(201,169,110,0.5);
+  border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);transition:transform 0.18s ease,width 0.3s,height 0.3s;
+}
+body:hover .cursor{opacity:1;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 64px;
+  background:linear-gradient(to bottom,rgba(10,9,8,0.95),transparent);
+  mix-blend-mode:normal;
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.35rem;font-weight:300;letter-spacing:4px;
+  text-transform:uppercase;color:var(--text);text-decoration:none;
+}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:0.72rem;
+  letter-spacing:3px;text-transform:uppercase;font-weight:500;
+  transition:color 0.3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:var(--accent);transition:width 0.3s;
+}
+.nav-links a:hover{color:var(--accent);}
+.nav-links a:hover::after{width:100%;}
+
+/* HERO */
+.hero{
+  height:100vh;position:relative;display:flex;
+  align-items:flex-end;padding:0 64px 100px;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 70% 40%,#1c160d,transparent),
+             radial-gradient(ellipse 80% 60% at 20% 80%,#0f0c08,transparent),
+             var(--bg);
+}
+.hero-lines{
+  position:absolute;inset:0;overflow:hidden;opacity:0.04;
+}
+.hero-lines::before{
+  content:'';position:absolute;top:0;left:50%;
+  width:1px;height:100%;background:var(--text);
+}
+.noise-overlay{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4;pointer-events:none;
+}
+.hero-number{
+  position:absolute;top:50%;right:64px;transform:translateY(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:22vw;font-weight:300;
+  color:transparent;-webkit-text-stroke:1px rgba(201,169,110,0.06);
+  line-height:1;pointer-events:none;user-select:none;
+  animation:driftUp 20s ease-in-out infinite alternate;
+}
+@keyframes driftUp{from{transform:translateY(-48%)} to{transform:translateY(-52%)}}
+
+.hero-content{position:relative;z-index:2;max-width:680px;}
+.hero-eyebrow{
+  font-size:0.68rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:28px;display:flex;align-items:center;gap:16px;
+  opacity:0;animation:fadeUp 1s 0.3s forwards;
+}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--accent);}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,7vw,6rem);font-weight:300;line-height:1.05;
+  letter-spacing:-1px;margin-bottom:28px;
+  opacity:0;animation:fadeUp 1s 0.5s forwards;
+}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{
+  font-size:0.9rem;color:var(--muted);max-width:440px;
+  line-height:1.8;margin-bottom:48px;font-weight:400;
+  opacity:0;animation:fadeUp 1s 0.7s forwards;
+}
+.hero-cta{
+  display:flex;gap:20px;align-items:center;
+  opacity:0;animation:fadeUp 1s 0.9s forwards;
+}
+.btn-gold{
+  display:inline-block;padding:14px 36px;
+  background:var(--accent);color:#0a0908;
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;font-weight:700;
+  text-decoration:none;border:none;cursor:none;
+  transition:background 0.3s,transform 0.3s;font-family:'Syne',sans-serif;
+}
+.btn-gold:hover{background:#e0bc84;transform:translateY(-2px);}
+.btn-ghost{
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+  transition:color 0.3s;font-weight:500;
+}
+.btn-ghost::after{content:'→';transition:transform 0.3s;}
+.btn-ghost:hover{color:var(--text);}
+.btn-ghost:hover::after{transform:translateX(6px);}
+
+/* MARQUEE */
+.marquee-wrap{
+  border-top:1px solid var(--border-soft);
+  border-bottom:1px solid var(--border-soft);
+  padding:18px 0;overflow:hidden;
+  opacity:0;animation:fadeIn 1s 1.2s forwards;
+}
+.marquee-track{
+  display:flex;gap:0;
+  animation:marquee 24s linear infinite;
+  width:max-content;
+}
+.marquee-item{
+  font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);padding:0 40px;display:flex;align-items:center;gap:40px;
+  white-space:nowrap;
+}
+.marquee-item span{color:var(--accent);font-size:1rem;}
+@keyframes marquee{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+
+/* SECTION BASE */
+section{padding:120px 64px;}
+.section-label{
+  font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:14px;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent);}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,4vw,3.5rem);font-weight:300;
+  line-height:1.15;letter-spacing:-0.5px;margin-bottom:64px;
+}
+.section-title em{font-style:italic;color:var(--accent);}
+
+/* WORK SECTION */
+#work{background:var(--bg);}
+.work-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:end;margin-bottom:72px;
+}
+.work-intro p{
+  color:var(--muted);font-size:0.88rem;line-height:1.9;font-weight:400;
+  max-width:380px;margin-left:auto;
+}
+.projects-grid{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:min-content;gap:2px;
+}
+.project-item{
+  position:relative;overflow:hidden;cursor:none;
+  background:var(--card);
+}
+.project-item:nth-child(1){grid-column:span 7;aspect-ratio:7/5;}
+.project-item:nth-child(2){grid-column:span 5;aspect-ratio:5/5;}
+.project-item:nth-child(3){grid-column:span 5;aspect-ratio:5/4;}
+.project-item:nth-child(4){grid-column:span 7;aspect-ratio:7/4;}
+.project-item img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94),filter 0.5s;
+  filter:brightness(0.85) saturate(0.8);
+}
+.project-item:hover img{transform:scale(1.06);filter:brightness(0.7) saturate(1);}
+.project-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,9,8,0.9) 0%,transparent 60%);
+  opacity:0;transition:opacity 0.4s;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:32px;
+}
+.project-item:hover .project-overlay{opacity:1;}
+.project-tag{
+  font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:8px;
+}
+.project-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;
+  letter-spacing:-0.3px;
+}
+.project-arrow{
+  position:absolute;top:24px;right:24px;
+  width:40px;height:40px;border:1px solid rgba(201,169,110,0.4);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--accent);font-size:1rem;opacity:0;
+  transform:rotate(-45deg);transition:opacity 0.3s,transform 0.3s;
+}
+.project-item:hover .project-arrow{opacity:1;transform:rotate(0);}
+
+/* ABOUT */
+#about{background:var(--surface);}
+.about-layout{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;
+}
+.about-text p{
+  color:var(--muted);font-size:0.95rem;line-height:2;margin-bottom:1.4rem;font-weight:400;
+}
+.about-text p strong{color:var(--text);font-weight:500;}
+.about-quote{
+  margin:40px 0;padding-left:28px;
+  border-left:1px solid var(--accent);
+}
+.about-quote p{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.5rem;font-weight:300;line-height:1.5;
+  color:var(--text);margin:0;
+}
+.services-list{margin-top:8px;}
+.service-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 0;border-bottom:1px solid var(--border-soft);
+  transition:padding-left 0.3s;cursor:default;
+}
+.service-row:hover{padding-left:8px;}
+.service-row span:first-child{font-size:0.82rem;letter-spacing:0.5px;}
+.service-num{
+  font-family:'Cormorant Garamond',serif;font-size:1rem;
+  color:var(--muted);font-weight:300;
+}
+.stats-row{
+  display:flex;gap:48px;margin-top:48px;padding-top:48px;
+  border-top:1px solid var(--border-soft);
+}
+.stat-block span{display:block;}
+.stat-big{
+  font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;
+  letter-spacing:-1px;color:var(--accent);line-height:1;
+}
+.stat-desc{font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+
+/* CONTACT */
+#contact{
+  background:var(--bg);
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;
+}
+.contact-left .section-title{margin-bottom:24px;}
+.contact-left p{
+  color:var(--muted);font-size:0.9rem;line-height:1.9;margin-bottom:40px;
+}
+.contact-detail{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:16px;color:var(--muted);font-size:0.82rem;
+}
+.contact-detail a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.contact-detail a:hover{color:var(--accent);}
+.contact-icon{
+  width:36px;height:36px;border:1px solid var(--border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;flex-shrink:0;
+}
+.contact-form{display:flex;flex-direction:column;gap:16px;}
+.form-group{position:relative;}
+.form-group label{
+  display:block;font-size:0.62rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
+}
+.form-group input,
+.form-group textarea{
+  width:100%;padding:14px 0;
+  background:transparent;border:none;border-bottom:1px solid var(--border-soft);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:0.9rem;
+  transition:border-color 0.3s;outline:none;resize:none;
+}
+.form-group input:focus,
+.form-group textarea:focus{border-bottom-color:var(--accent);}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:var(--muted);}
+.submit-btn{
+  margin-top:8px;padding:16px 40px;
+  background:transparent;border:1px solid var(--accent);
+  color:var(--accent);font-family:'Syne',sans-serif;
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;
+  font-weight:700;cursor:none;transition:background 0.3s,color 0.3s;
+  align-self:flex-start;
+}
+.submit-btn:hover{background:var(--accent);color:var(--bg);}
+
+/* FOOTER */
+footer{
+  padding:32px 64px;
+  border-top:1px solid var(--border-soft);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1rem;
+  font-weight:300;letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{
+  color:var(--muted);text-decoration:none;font-size:0.7rem;
+  letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--accent);}
+.footer-copy{font-size:0.68rem;color:var(--muted);opacity:0.5;}
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;inset:0;background:rgba(10,9,8,0.96);
+  display:none;align-items:center;justify-content:center;z-index:2000;
+  backdrop-filter:blur(12px);
+}
+.lightbox.open{display:flex;}
+.lightbox-inner{position:relative;max-width:85vw;}
+.lightbox img{
+  max-width:100%;max-height:85vh;display:block;
+  border:1px solid var(--border);
+}
+.lightbox-close{
+  position:fixed;top:32px;right:40px;
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);cursor:none;background:none;border:none;
+  font-family:'Syne',sans-serif;transition:color 0.2s;
+}
+.lightbox-close:hover{color:var(--text);}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:20px 24px;}
+  .hero{padding:0 24px 80px;}
+  .hero-number{display:none;}
+  section{padding:80px 24px;}
+  .work-intro{grid-template-columns:1fr;}
+  .projects-grid{grid-template-columns:1fr 1fr;grid-auto-rows:auto;}
+  .project-item:nth-child(n){grid-column:span 1;aspect-ratio:4/3;}
+  .about-layout{grid-template-columns:1fr;gap:3rem;}
+  #contact{grid-template-columns:1fr;gap:3rem;}
+  footer{flex-direction:column;gap:16px;text-align:center;}
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo">BB</div>
-      <div>
-        <h1>Bouziane Boutouizera</h1>
-        <p class="lead">Packaging • Logo • Illustration • Poster</p>
-      </div>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="nav-logo">Bouziane<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="noise-overlay"></div>
+  <div class="hero-number">B</div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Packaging Design Studio</p>
+    <h1>Design that<br>sells before it's<br><em>ever touched.</em></h1>
+    <p class="hero-desc">Premium packaging, luxury branding, and visual identity systems built on strategy, psychology, and shelf impact.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn-gold">View Selected Work</a>
+      <a href="#contact" class="btn-ghost">Start a Project</a>
     </div>
-    <div class="controls">
-      <input id="search" class="search" placeholder="Chercher projet...">
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>✦</span> Luxury Packaging <span>✦</span> Brand Identity <span>✦</span> Visual Systems <span>✦</span> FMCG Design <span>✦</span> Shelf Impact <span>✦</span> Art Direction</div>
+    <div class="marquee-item"><span>✦</span> Luxury Packaging <span>✦</span> Brand Identity <span>✦</span> Visual Systems <span>✦</span> FMCG Design <span>✦</span> Shelf Impact <span>✦</span> Art Direction</div>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="work-intro reveal">
+    <div>
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Packaging that<br><em>commands attention.</em></h2>
     </div>
-  </header>
-
-  <nav class="filters">
-    <button class="chip active" data-filter="all">All</button>
-    <button class="chip" data-filter="packaging">Packaging</button>
-    <button class="chip" data-filter="logo">Logo</button>
-    <button class="chip" data-filter="illustration">Illustration</button>
-    <button class="chip" data-filter="poster">Poster</button>
-  </nav>
-
-  <section id="gallery" class="gallery"></section>
-
-  <div id="lightbox" class="lightbox">
-    <button id="lbClose" class="lb-close">Close</button>
-    <img id="lbImage" src="" alt="">
+    <p>Every project begins with a single question: what makes someone reach for this on a shelf full of competitors? The answer lives in the details — material, typography, colour psychology, and structure.</p>
   </div>
 
-  <footer>
-    <p>© 2025 Bouziane Boutouizera — Orange & Black Theme</p>
-  </footer>
+  <div class="projects-grid reveal">
+    <div class="project-item">
+      <img src="https://images.unsplash.com/photo-1601049541289-9b1b7c7f5d20?w=900&q=80" alt="Luxury Skincare Packaging" loading="lazy">
+      <div class="project-overlay">
+        <p class="project-tag">Luxury Skincare</p>
+        <p class="project-name">Lumière Cosmetics</p>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-item">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Fragrance Packaging" loading="lazy">
+      <div class="project-overlay">
+        <p class="project-tag">Fragrance</p>
+        <p class="project-name">Noir Collection</p>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-item">
+      <img src="https://images.unsplash.com/photo-1615486364462-ef6363c0c3f1?w=700&q=80" alt="Spirits Packaging" loading="lazy">
+      <div class="project-overlay">
+        <p class="project-tag">Premium Spirits</p>
+        <p class="project-name">Reserve Edition</p>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-item">
+      <img src="https://images.unsplash.com/photo-1525904097878-94fb15835963?w=900&q=80" alt="Food Packaging" loading="lazy">
+      <div class="project-overlay">
+        <p class="project-tag">Artisan Food</p>
+        <p class="project-name">Maison Delice</p>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+  </div>
+</section>
 
-  <script src="script.js"></script>
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-layout">
+    <div>
+      <p class="section-label reveal">The Studio</p>
+      <h2 class="section-title reveal">Built on strategy,<br>not just <em>aesthetics.</em></h2>
+      <div class="about-text reveal">
+        <p>I'm a senior packaging designer with over <strong>8 years of experience</strong> at the intersection of luxury branding, FMCG, and visual identity systems.</p>
+        <p>My work is shaped by the belief that great packaging is never decorative — it's a silent salesperson. It communicates brand values, justifies price points, and builds emotional connections before a word is read.</p>
+        <div class="about-quote">
+          <p>"A package is the last five seconds of marketing — and the first five seconds of the product experience."</p>
+        </div>
+        <p>Based in Algeria, working with clients across Europe, the Middle East, and North Africa.</p>
+      </div>
+      <div class="stats-row reveal">
+        <div class="stat-block">
+          <span class="stat-big">60+</span>
+          <span class="stat-desc">Projects Delivered</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-big">30+</span>
+          <span class="stat-desc">Brand Identities</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-big">8</span>
+          <span class="stat-desc">Years Experience</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="services-list reveal">
+        <div class="service-row">
+          <span>Packaging Design & Structural</span>
+          <span class="service-num">01</span>
+        </div>
+        <div class="service-row">
+          <span>Brand Identity Systems</span>
+          <span class="service-num">02</span>
+        </div>
+        <div class="service-row">
+          <span>Luxury & Premium Branding</span>
+          <span class="service-num">03</span>
+        </div>
+        <div class="service-row">
+          <span>FMCG & Retail Packaging</span>
+          <span class="service-num">04</span>
+        </div>
+        <div class="service-row">
+          <span>Art Direction & Photography</span>
+          <span class="service-num">05</span>
+        </div>
+        <div class="service-row">
+          <span>Print Production & Finishing</span>
+          <span class="service-num">06</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left reveal">
+    <p class="section-label">Let's Work Together</p>
+    <h2 class="section-title">Have a project<br>in <em>mind?</em></h2>
+    <p>Whether you're launching a new product line, repositioning an existing brand, or developing a full identity system — I'd love to hear about it.</p>
+    <div class="contact-detail">
+      <div class="contact-icon">✉</div>
+      <a href="mailto:hello@bouziane.studio">hello@bouziane.studio</a>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">📍</div>
+      <span>Algeria — Available Worldwide</span>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">💼</div>
+      <a href="https://behance.net" target="_blank">Behance Portfolio</a>
+    </div>
+  </div>
+  <div class="reveal reveal-delay-2">
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="e.g. Karim Amrani" required/>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="karim@company.com" required/>
+      </div>
+      <div class="form-group">
+        <label>Project Type</label>
+        <input type="text" placeholder="e.g. Luxury Packaging, Brand Identity…"/>
+      </div>
+      <div class="form-group">
+        <label>Tell Me About Your Project</label>
+        <textarea rows="5" placeholder="Brief, budget, timeline…"></textarea>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Bouziane Studio</div>
+  <div class="footer-links">
+    <a href="https://behance.net" target="_blank">Behance</a>
+    <a href="https://instagram.com" target="_blank">Instagram</a>
+    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+  </div>
+  <p class="footer-copy">© 2025 Bouziane Studio. All rights reserved.</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">Close ✕</button>
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt=""/>
+  </div>
+</div>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+(function animRing(){
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.project-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width='6px'; cursor.style.height='6px'; ring.style.width='52px'; ring.style.height='52px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width='10px'; cursor.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; });
+});
+
+// Lightbox
+document.querySelectorAll('.project-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const img = item.querySelector('img');
+    document.getElementById('lightboxImg').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  });
+});
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.getElementById('lightbox').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeLightbox();
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Form submit
+function handleSubmit(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Message Sent ✓';
+    btn.style.borderColor = '#4ade80';
+    btn.style.color = '#4ade80';
+    e.target.reset();
+  }, 1400);
+}
+</script>
 </body>
 </html>
